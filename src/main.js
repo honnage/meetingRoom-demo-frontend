@@ -13,4 +13,11 @@ import Antd from 'ant-design-vue'
 import './assets/styles.css'
 
 
-createApp(App).use(store).use(router).use(Antd).mount('#app')
+const app = createApp(App);
+
+app.use(router);
+app.use(store);
+app.use(Antd);
+
+app.mount('#app')
+
