@@ -5,12 +5,11 @@
       <div class="col-md-6">
         <img src="/img/logo.png" alt="Logo" class="img-logo" />
         <div class="card">
-          <h1 class="card-header">REGISTER</h1>
+          <h1 class="card-header">LOGIN</h1>
           <div class="card-body">
             <a-form
               :model="formState"
               name="basic"
-              :label-col="{ span: 8 }"
               :wrapper-col="{ span: 24 }"
               @submit.prevent="onSubmit()"
             >
@@ -36,11 +35,7 @@
                     {
                       required: true,
                       message: 'Please input your password!',
-                    },
-                    {
-                      pattern: /^(?=.*[a-z])[a-zA-Z0-9]{8,15}$/,
-                      message: 'Password be between 8 and 15 characters long',
-                    },
+                    }
                   ]"
                 >
                   <label for="u_password" class="label"> รหัสผ่าน </label>
@@ -48,47 +43,17 @@
                 </a-form-item>
               </div>
 
-              <div class="form-item-wrapper">
-                <a-form-item
-                  name="u_firstname"
-                  :rules="[
-                    {
-                      required: true,
-                      message: 'Please input your firstname!',
-                    },
-                  ]"
-                >
-                  <label for="u_firstname" class="label"> ชื่อ </label>
-                  <a-input v-model:value="formState.u_firstname" />
-                </a-form-item>
-              </div>
-
-              <div class="form-item-wrapper">
-                <a-form-item
-                  name="u_lastname"
-                  :rules="[
-                    {
-                      required: true,
-                      message: 'Please input your lastname!',
-                    },
-                  ]"
-                >
-                  <label for="u_lastname" class="label"> นามสกุล </label>
-                  <a-input v-model:value="formState.u_lastname" />
-                </a-form-item>
-              </div>
-
               <div class="form-group buttons">
                 <button type="submit" class="btn btn-info btn-block">
-                  ลงทะเบียน
+                  เข้าสู่ระบบ
                 </button>
 
                 <button
                   type="button"
-                  @click="onRedirectToLogin()"
+                  @click="onRedirectToRegister()"
                   class="btn btn-secondary btn-block"
                 >
-                  เข้าสู่ระบบ
+                  ลงทะเบียน
                 </button>
               </div>
             </a-form>
@@ -123,32 +88,16 @@ export default defineComponent({
     return {
       formState: {
         u_username: "",
-        u_password: "",
-        u_firstname: "",
-        u_lastname: "",
+        u_password: ""
       },
       checkUsername: false,
-      checkPassword: false,
-      checkFirstname: false,
-      checkLastname: false,
+      checkPassword: false
     };
   },
   methods: {
     onSubmit() {
-      // console.log("onSubmit", this.formState);
-
-      // /^(?=.*[0-9])(?=.*[a-z])[a-zA-Z0-9]{8,15}$/,
-      // 'Password must contain at least one digit and be between 8 and 15 characters long',
-      //  รหัสผ่านต้องประกอบด้วยตัวเลขอย่างน้อย 1 ตัวและมีความยาวระหว่าง 8 ถึง 15 ตัวอักษร
-
-      // /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,15}$/,
-      // 'Password must contain at least one uppercase letter, at least one digit, and be between 8 and 15 characters long',
-      // รหัสผ่านต้องประกอบด้วยตัวอักษรพิมพ์ใหญ่อย่างน้อย 1 ตัว, ตัวเลขอย่างน้อย 1 ตัว และมีความยาวระหว่าง 8 ถึง 15 ตัวอักษร
-
       const username = this.formState.u_username;
       const password = this.formState.u_password;
-      const firstname = this.formState.u_firstname;
-      const lastname = this.formState.u_lastname;
       const regexPassword = /^(?=.*[a-z])[a-zA-Z0-9]{8,15}$/;
 
       const isValidPassword = regexPassword.test(password);
@@ -167,24 +116,10 @@ export default defineComponent({
         this.checkUsername = false;
       }
 
-      if (firstname != "") {
-        this.checkFirstname = true;
-      } else {
-        this.checkFirstname = false;
-      }
-
-      if (lastname != "") {
-        this.checkLastname = true;
-      } else {
-        this.checkLastname = false;
-      }
-
 
       if (
         this.checkUsername == true &&
-        this.checkPassword == true &&
-        this.checkFirstname == true &&
-        this.checkLastname == true
+        this.checkPassword == true
       ) {
         console.log("this.formState", this.formState);
         axios
@@ -199,7 +134,6 @@ export default defineComponent({
               "Save data successfully"
             );
             this.onReset();
-            this.onRedirectToLogin()
           })
           .catch((err) => {
             this.openNotificationWithIcon(
@@ -216,13 +150,11 @@ export default defineComponent({
       this.formState = {
         u_username: "",
         u_password: "",
-        u_firstname: "",
-        u_lastname: "",
       };
     },
 
-    onRedirectToLogin() {
-      this.$router.push("/login");
+    onRedirectToRegister() {
+      this.$router.push("/register");
     },
 
     openNotificationWithIcon(type, title, details) {
