@@ -35,7 +35,7 @@
                     {
                       required: true,
                       message: 'Please input your password!',
-                    }
+                    },
                   ]"
                 >
                   <label for="u_password" class="label"> รหัสผ่าน </label>
@@ -88,10 +88,10 @@ export default defineComponent({
     return {
       formState: {
         u_username: "",
-        u_password: ""
+        u_password: "",
       },
       checkUsername: false,
-      checkPassword: false
+      checkPassword: false,
     };
   },
   methods: {
@@ -103,10 +103,8 @@ export default defineComponent({
       const isValidPassword = regexPassword.test(password);
 
       if (isValidPassword) {
-        // console.log("รหัสผ่านถูกต้อง")
         this.checkPassword = true;
       } else {
-        // console.log("รหัสผ่านไม่ถูกต้อง")
         this.checkPassword = false;
       }
 
@@ -116,34 +114,29 @@ export default defineComponent({
         this.checkUsername = false;
       }
 
+      console.log("this.formState", this.formState);
+      axios
+        // .post(`http://localhost:3066/api/account/login`, this.formState)
+        .post(`api/account/login`, this.formState)
+        .then((response) => {
+          console.log("response", response);
+          this.$router.push("/home");
 
-      if (
-        this.checkUsername == true &&
-        this.checkPassword == true
-      ) {
-        console.log("this.formState", this.formState);
-        axios
-          // .post(`http://localhost:3066/api/account/register`, this.formState)
-          .post(`api/account/register`, this.formState)
-
-          .then((response) => {
-            console.log("response", response);
-            this.openNotificationWithIcon(
-              "success",
-              "Register success",
-              "Save data successfully"
-            );
-            this.onReset();
-          })
-          .catch((err) => {
-            this.openNotificationWithIcon(
-              "error",
-              err.request.statusText,
-              err.response.data.message
-            );
-            console.log("error", err);
-          });
-      }
+          this.openNotificationWithIcon(
+            "success",
+            "Login success",
+            "Welcome back"
+          );
+          this.onReset();
+        })
+        .catch((err) => {
+          console.log("error", err);
+          this.openNotificationWithIcon(
+            "error",
+            "Login fail",
+            err.response.data.message
+          );
+        });
     },
 
     onReset() {
